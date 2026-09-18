@@ -22,6 +22,9 @@ $(OBJ_DIR)vector.obj: $(SRC_DIR)vector.cpp $(SRC_DIR)vector.h
 $(OBJ_DIR)mandel.obj: $(SRC_DIR)mandel.cpp $(SRC_DIR)mandel.h $(OBJ_DIR)box.obj
 	$(FUNC) $(output)$(OBJ_DIR)mandel.obj $(copt) $(SRC_DIR)mandel.cpp $(FLAGS)
 
+$(OBJ_DIR)bvh.obj: $(SRC_DIR)bvh.cpp $(SRC_DIR)bvh.h $(OBJ_DIR)vector.obj
+	$(FUNC) $(output)$(OBJ_DIR)bvh.obj $(copt) $(SRC_DIR)bvh.cpp $(FLAGS)
+
 $(OBJ_DIR)camera.obj: $(SRC_DIR)camera.cpp $(SRC_DIR)camera.h $(OBJ_DIR)vector.obj
 	$(FUNC) $(output)$(OBJ_DIR)camera.obj $(copt) $(SRC_DIR)camera.cpp $(FLAGS)
 

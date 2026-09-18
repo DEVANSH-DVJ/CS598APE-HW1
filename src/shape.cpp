@@ -35,8 +35,8 @@ void calcColor(unsigned char* toFill,Autonoma* c, Ray ray, unsigned int depth){
    // We only need to find the nearest hit for the ray with one scan.
    double curTime = inf;
    Shape* curShape = NULL;
-   const size_t n = c->shapes.size();
-   Shape* const* arr = c->shapes.data();
+   const size_t n = c->unbounded.size();
+   Shape* const* arr = c->unbounded.data();
    for(size_t i = 0; i < n; ++i){
       double time = arr[i]->getIntersection(ray);
       if(time < curTime){
@@ -44,6 +44,8 @@ void calcColor(unsigned char* toFill,Autonoma* c, Ray ray, unsigned int depth){
          curShape = arr[i];
       }
    }
+   Shape* bvhHit = c->bvh.closestHit(ray, curTime);
+   if(bvhHit != NULL) curShape = bvhHit;
 
    // This ray didn't hit anything.
    if (curShape == NULL) {

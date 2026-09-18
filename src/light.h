@@ -1,6 +1,7 @@
 #ifndef __LIGHT_H__
 #define __LIGHT_H__
 #include <vector>
+#include "bvh.h"
 #include "vector.h"
 #include "camera.h"
 #include "Textures/texture.h"
@@ -37,6 +38,12 @@ public:
    // read, so pointer-chasing a node per shape costs a cache miss for nothing.
    std::vector<Shape*> shapes;
    std::vector<Light*> lights;
+   // Acceleration structure over `shapes`. Rebuilt once per frame by
+   // buildBVH(); `unbounded` holds the shapes that have no finite box
+   // (infinite planes) and is scanned linearly alongside the tree.
+   BVH bvh;
+   std::vector<Shape*> unbounded;
+   void buildBVH();
    Autonoma(const Camera &c);
    Autonoma(const Camera &c, Texture* tex);
    void addShape(Shape* s);

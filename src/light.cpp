@@ -48,6 +48,10 @@ void Autonoma::addShape(Shape* r){
    }
 }
 
+void Autonoma::buildBVH(){
+   bvh.build(shapes, unbounded);
+}
+
 void Autonoma::removeShape(ShapeNode* s){
    for(size_t i=0;i<shapes.size();i++) if(shapes[i]==s->data){ shapes.erase(shapes.begin()+i); break; }
    if(s==listStart){
@@ -111,8 +115,8 @@ void Autonoma::removeLight(LightNode* s){
 
 void getLight(double* tColor, Autonoma* aut, const Vector& point, const Vector& norm, unsigned char flip){
    tColor[0] = tColor[1] = tColor[2] = 0.;
-   const size_t nShapes = aut->shapes.size();
-   Shape* const* shapeArr = aut->shapes.data();
+   const size_t nUnbounded = aut->unbounded.size();
+   Shape* const* unboundedArr = aut->unbounded.data();
    for(size_t li = 0; li < aut->lights.size(); ++li){
       Light* l = aut->lights[li];
       double lightColor[3];     
@@ -122,9 +126,12 @@ void getLight(double* tColor, Autonoma* aut, const Vector& point, const Vector& 
       Vector ra = l->center-point;
       const Ray shadowRay(point+ra*.01, ra);
       bool hit = false;
-      for(size_t i = 0; i < nShapes && !hit; ++i){
-         hit = shapeArr[i]->getLightIntersection(shadowRay, lightColor);
+      // getLightIntersection() rejects anything past the light (it bounds the
+      // hit to r<1 in units of `ra`), so the BVH walk is bounded the same way.
+      for(size_t i = 0; i < nUnbounded && !hit; ++i){
+         hit = unboundedArr[i]->getLightIntersection(shadowRay, lightColor);
       }
+      if(!hit) hit = aut->bvh.anyLightHit(shadowRay, lightColor, 1.0);
       double perc = (norm.dot(ra)/(ra.mag()*norm.mag()));
       if(!hit){
       if(flip && perc<0) perc=-perc;

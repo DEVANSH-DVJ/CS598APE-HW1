@@ -433,6 +433,9 @@ void setFrame(const char* animateFile, Autonoma* MAIN_DATA, int frame, int frame
       }
    }
 
+   // Rebuild the acceleration structure after the frame's transforms have been
+   // applied, so it stays correct even for scenes whose objects move.
+   MAIN_DATA->buildBVH();
    refresh(MAIN_DATA);
 }
 

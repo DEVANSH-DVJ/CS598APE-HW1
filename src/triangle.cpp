@@ -35,6 +35,9 @@ Triangle::Triangle(Vector c, Vector b, Vector a, Texture* t):Plane(Vector(0,0,0)
    textureY = np.y;
    thirdX = np.x;
    
+   bmin = Vector(fmin(c.x, fmin(b.x, a.x)), fmin(c.y, fmin(b.y, a.y)), fmin(c.z, fmin(b.z, a.z)));
+   bmax = Vector(fmax(c.x, fmax(b.x, a.x)), fmax(c.y, fmax(b.y, a.y)), fmax(c.z, fmax(b.z, a.z)));
+
    d = -vect.dot(center);
 }
 
@@ -66,4 +69,16 @@ bool Triangle::getLightIntersection(Ray ray, double* fill){
    fill[1]*=temp[1]/255.;
    fill[2]*=temp[2]/255.;
    return false;
+}
+
+// Pad by an absolute+relative epsilon so axis-aligned triangles do not get a
+// zero-thickness box that a ray can slip through due to rounding.
+bool Triangle::getBounds(Vector& lo, Vector& hi){
+   const double eps = 1e-9;
+   const double px = eps + 1e-12*fabs(bmax.x-bmin.x);
+   const double py = eps + 1e-12*fabs(bmax.y-bmin.y);
+   const double pz = eps + 1e-12*fabs(bmax.z-bmin.z);
+   lo = Vector(bmin.x-px, bmin.y-py, bmin.z-pz);
+   hi = Vector(bmax.x+px, bmax.y+py, bmax.z+pz);
+   return true;
 }
