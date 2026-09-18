@@ -46,6 +46,13 @@ void set(int i, int j, unsigned char r, unsigned char g, unsigned char b){
 }
 
 void refresh(Autonoma* c){
+   // Each iteration writes only its own pixel at &DATA[3*n] and the scene is
+   // read-only during a frame (textures are loaded up front; getLight and
+   // calcColor touch only locals), so the loop parallelises without any
+   // synchronisation and the image is identical for any thread count.
+   // Dynamic scheduling matters: cost per ray varies by orders of magnitude
+   // between background rays and rays that hit reflective geometry.
+   #pragma omp parallel for schedule(dynamic, 64)
    for(int n = 0; n<H*W; ++n) 
    { 
       Vector ra = c->camera.forward+((double)(n%W)/W-.5)*((c->camera.right))+(.5-(double)(n/W)/H)*((c->camera.up));
