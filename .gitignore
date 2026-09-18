@@ -1,0 +1,16 @@
+*.obj
+*.exe
+output/*.ppm
+output/*.png
+output/*.mp4
+output/*.tmp.*
+bench/results/
+
+# generated: figures are produced by the plotting notebooks, textures by
+# make_ppm_textures.py, and the paper sources live outside this repo
+*.pdf
+report/figures/
+report/*.tex
+!report/experiment_setup.tex
+report/*.md
+images/*.ppm

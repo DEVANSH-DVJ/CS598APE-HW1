@@ -1,0 +1,37 @@
+% Experimental setup. Every figure in the paper was measured under these
+% conditions; deviations are stated in the section that reports them.
+\begin{table}[!h]
+  \centering
+  \caption{Experimental setup.}
+  \label{tab:setup}
+  \small
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \multicolumn{2}{@{}l}{\textbf{Machine}} \\
+    Processors      & 2 $\times$ AMD EPYC~9334, 32 cores each \\
+    Cores / threads & 64 / 128, two NUMA domains \\
+    Clock           & up to \SI{3.91}{\giga\hertz} \\
+    L3 cache        & \SI{256}{\mebi\byte} (8 instances) \\
+    Memory          & \SI{1.5}{\tebi\byte} \\
+    \midrule
+    \multicolumn{2}{@{}l}{\textbf{Software}} \\
+    OS              & Ubuntu 22.04.5 (glibc 2.35) \\
+    Compiler        & GCC 11.4.0 \\
+    Scheduler       & Slurm, one exclusive allocation per measurement \\
+    \midrule
+    \multicolumn{2}{@{}l}{\textbf{Method}} \\
+    Timer           & the program's own \texttt{Total time to create images} \\
+    Covered         & the frame loop, including hierarchy construction \\
+    Not covered     & scene parsing and texture decoding \\
+    Repetitions     & median of three runs \\
+    Threads         & 1, except Sections~\ref{sec:opt6_openmp}--\ref{sec:opt8_bvh_rebuild},
+                      which use 32 \\
+    \midrule
+    \multicolumn{2}{@{}l}{\textbf{Workloads}} \\
+    Piano room      & 22 shapes, $1000\times1000$ \\
+    Globe           & 5 shapes, image textures, $1000\times1000$ \\
+    Sphere mesh     & 3168 triangles, $100\times100$ \\
+    Elephant        & 111748 triangles, $100\times100$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
