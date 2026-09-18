@@ -410,6 +410,9 @@ void setFrame(const char* animateFile, Autonoma* MAIN_DATA, int frame, int frame
                node = node->next;
             }
             Shape* shape = node->data;
+            // Any of the branches below can move or reorient the shape, so the
+            // acceleration structure must be rebuilt for this frame.
+            MAIN_DATA->markShapesDirty();
 
             if (streq(field_type, "yaw")) {
                shape->setYaw(result);

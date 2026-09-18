@@ -21,6 +21,7 @@ Autonoma::Autonoma(const Camera& c): camera(c){
    lightStart = NULL;
    lightEnd = NULL;
    depth = 10;
+   shapesDirty = true;
    skybox = BLACK;
 }
 
@@ -30,11 +31,13 @@ Autonoma::Autonoma(const Camera& c, Texture* tex): camera(c){
    lightStart = NULL;
    lightEnd = NULL;
    depth = 10;
+   shapesDirty = true;
    skybox = tex;
 }
 
 void Autonoma::addShape(Shape* r){
    shapes.push_back(r);
+   shapesDirty = true;
    ShapeNode* hi = (ShapeNode*)malloc(sizeof(ShapeNode));
    hi->data = r;
    hi->next = hi->prev = NULL;
@@ -49,7 +52,9 @@ void Autonoma::addShape(Shape* r){
 }
 
 void Autonoma::buildBVH(){
+   if(!shapesDirty) return;
    bvh.build(shapes, unbounded);
+   shapesDirty = false;
 }
 
 void Autonoma::removeShape(ShapeNode* s){

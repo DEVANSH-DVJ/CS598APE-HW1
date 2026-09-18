@@ -43,7 +43,12 @@ public:
    // (infinite planes) and is scanned linearly alongside the tree.
    BVH bvh;
    std::vector<Shape*> unbounded;
+   // Set whenever a shape is added or transformed; buildBVH() is a no-op while
+   // it is false, so a scene whose animation only moves the camera builds its
+   // tree once rather than once per frame.
+   bool shapesDirty;
    void buildBVH();
+   void markShapesDirty(){ shapesDirty = true; }
    Autonoma(const Camera &c);
    Autonoma(const Camera &c, Texture* tex);
    void addShape(Shape* s);
