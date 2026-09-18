@@ -1,5 +1,6 @@
 #ifndef __LIGHT_H__
 #define __LIGHT_H__
+#include <vector>
 #include "vector.h"
 #include "camera.h"
 #include "Textures/texture.h"
@@ -31,6 +32,11 @@ public:
    unsigned int depth;
    ShapeNode *listStart, *listEnd;
    LightNode *lightStart, *lightEnd;
+   // Contiguous mirrors of the two linked lists above. Every per-ray traversal
+   // walks these instead: the lists are built once at load time and then only
+   // read, so pointer-chasing a node per shape costs a cache miss for nothing.
+   std::vector<Shape*> shapes;
+   std::vector<Light*> lights;
    Autonoma(const Camera &c);
    Autonoma(const Camera &c, Texture* tex);
    void addShape(Shape* s);
@@ -39,6 +45,6 @@ public:
    void removeLight(LightNode* s);
 };
 
-void getLight(double* toFill, Autonoma* aut, Vector point, Vector norm, unsigned char r);
+void getLight(double* toFill, Autonoma* aut, const Vector& point, const Vector& norm, unsigned char r);
 
 #endif

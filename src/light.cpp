@@ -34,6 +34,7 @@ Autonoma::Autonoma(const Camera& c, Texture* tex): camera(c){
 }
 
 void Autonoma::addShape(Shape* r){
+   shapes.push_back(r);
    ShapeNode* hi = (ShapeNode*)malloc(sizeof(ShapeNode));
    hi->data = r;
    hi->next = hi->prev = NULL;
@@ -48,6 +49,7 @@ void Autonoma::addShape(Shape* r){
 }
 
 void Autonoma::removeShape(ShapeNode* s){
+   for(size_t i=0;i<shapes.size();i++) if(shapes[i]==s->data){ shapes.erase(shapes.begin()+i); break; }
    if(s==listStart){
       if(s==listEnd){
          listStart = listStart = NULL;
@@ -70,6 +72,7 @@ void Autonoma::removeShape(ShapeNode* s){
 }
 
 void Autonoma::addLight(Light* r){
+   lights.push_back(r);
    LightNode* hi = (LightNode*)malloc(sizeof(LightNode));
    hi->data = r;
    hi->next = hi->prev = NULL;
@@ -84,6 +87,7 @@ void Autonoma::addLight(Light* r){
 }
 
 void Autonoma::removeLight(LightNode* s){
+   for(size_t i=0;i<lights.size();i++) if(lights[i]==s->data){ lights.erase(lights.begin()+i); break; }
    if(s==lightStart){
       if(s==lightEnd){
          lightStart = lightStart = NULL;
@@ -105,20 +109,21 @@ void Autonoma::removeLight(LightNode* s){
    free(s);
 }
 
-void getLight(double* tColor, Autonoma* aut, Vector point, Vector norm, unsigned char flip){
+void getLight(double* tColor, Autonoma* aut, const Vector& point, const Vector& norm, unsigned char flip){
    tColor[0] = tColor[1] = tColor[2] = 0.;
-   LightNode *t = aut->lightStart;
-   while(t!=NULL){
+   const size_t nShapes = aut->shapes.size();
+   Shape* const* shapeArr = aut->shapes.data();
+   for(size_t li = 0; li < aut->lights.size(); ++li){
+      Light* l = aut->lights[li];
       double lightColor[3];     
-      lightColor[0] = t->data->color[0]/255.;
-      lightColor[1] = t->data->color[1]/255.;
-      lightColor[2] = t->data->color[2]/255.;
-      Vector ra = t->data->center-point;
-      ShapeNode* shapeIter = aut->listStart;
+      lightColor[0] = l->color[0]/255.;
+      lightColor[1] = l->color[1]/255.;
+      lightColor[2] = l->color[2]/255.;
+      Vector ra = l->center-point;
+      const Ray shadowRay(point+ra*.01, ra);
       bool hit = false;
-      while(!hit && shapeIter!=NULL){
-        hit = shapeIter->data->getLightIntersection(Ray(point+ra*.01, ra), lightColor);
-         shapeIter = shapeIter->next;
+      for(size_t i = 0; i < nShapes && !hit; ++i){
+         hit = shapeArr[i]->getLightIntersection(shadowRay, lightColor);
       }
       double perc = (norm.dot(ra)/(ra.mag()*norm.mag()));
       if(!hit){
@@ -133,6 +138,5 @@ void getLight(double* tColor, Autonoma* aut, Vector point, Vector norm, unsigned
          if(tColor[2]>1.) tColor[2] = 1.;
         }
       }
-      t =t->next;
    }
 }
