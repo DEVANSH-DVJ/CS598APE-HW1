@@ -1,4 +1,31 @@
-# 598APE-HW1
+# 598APE-HW1: optimized raytracer
+
+This fork speeds up the course raytracer with eight optimizations, one commit each.
+The original course README follows below.
+
+- **Tools:**
+  everything runs in a container built from the course's `docker/Dockerfile` (unchanged).
+  The image is named **`598ape-hw1`**.
+  `./dockerrun.sh` builds it on first use (same as `docker build -t 598ape-hw1 docker`) and opens a shell with this repository at `/host`.
+- **Build and run:**
+  inside the shell, run `make -j`, then the commands in [RUN.md](RUN.md#2-build-and-run-the-final-version).
+- **Reproduce the results for every commit:**
+  inside the shell, `bench/run.sh` builds each commit below and times the four test scenes, and `bench/check.sh` checks that every commit renders the same images.
+  See [RUN.md](RUN.md) for options and for the command behind each figure in the report.
+
+| Name   | Commit    | Report section                                             |
+| ------ | --------- | ---------------------------------------------------------- |
+| `base` | `19bbc81` | Baseline (upstream code, unmodified)                       |
+| `opt1` | `43be1d5` | 2.1 Apply Compilation Flag -O3                             |
+| `opt2` | `ba08ccb` | 2.2 Find the Nearest Hit for Each Ray with Running Minimum |
+| `opt3` | `d2b20ab` | 2.3 Make Vector Compute Header-Only and Inlined            |
+| `opt4` | `3eb19ef` | 2.4 Avoid Using Linked Lists                               |
+| `opt5` | `c035059` | 2.5 Add a Bounding Volume Hierarchy                        |
+| `opt6` | `a50c6c7` | 2.6 Parallelize the Primary Ray Loop                       |
+| `opt7` | `46022a0` | 2.7 Cache Each Plane's Basis Inverse                       |
+| `opt8` | `fbf4ed4` | 2.8 Rebuild the Hierarchy Only When Shapes Move            |
+
+---
 
 This repository contains code for homework 1 of 598APE.
 
