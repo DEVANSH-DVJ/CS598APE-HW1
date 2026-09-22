@@ -5,6 +5,7 @@ output/*.png
 output/*.mp4
 output/*.tmp.*
 bench/results/
+bench/build/
 
 # generated: figures are produced by the plotting notebooks, textures by
 # make_ppm_textures.py, and the paper sources live outside this repo

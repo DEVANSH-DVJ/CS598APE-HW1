@@ -1,0 +1,12 @@
+# Commits that bench/run.sh knows by name, in the order the optimizations were applied.
+# Descriptions are the subsection headings of the report.
+# name  commit                                    report section
+base    19bbc813a55d19354196bf9887d3786adfe2f6c0  Baseline (upstream code, unmodified)
+opt1    43be1d553a8fcbee227f95c59f81dc4b974dc200  2.1 Apply Compilation Flag -O3
+opt2    ba08ccb42774eea4a579fbc869d399ddbe15f7a8  2.2 Find the Nearest Hit for Each Ray with Running Minimum
+opt3    d2b20abbc058e64fbacadfbbb2aff026a2923d66  2.3 Make Vector Compute Header-Only and Inlined
+opt4    3eb19ef5727eda433f624c75736396cce37d6327  2.4 Avoid Using Linked Lists
+opt5    c0350597ee7ce047e1424a11311d9383db4ef92a  2.5 Add a Bounding Volume Hierarchy
+opt6    a50c6c72a814f4366c709a4e05980c6ce0ca7e27  2.6 Parallelize the Primary Ray Loop
+opt7    46022a018aa09304ab6c4214bae70362eca63b39  2.7 Cache Each Plane's Basis Inverse
+opt8    fbf4ed4b66781196ffb201856f2b545a1accfcd1  2.8 Rebuild the Hierarchy Only When Shapes Move
